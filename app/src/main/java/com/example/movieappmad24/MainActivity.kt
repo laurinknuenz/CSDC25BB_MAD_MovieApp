@@ -55,6 +55,7 @@ import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +98,12 @@ fun MovieAppScaffold() {
         bottomBar = {
             BottomAppBar()
             {
-                BottomNavigationBar(mapOf("Home" to Icons.Filled.Home, "Watchlist" to Icons.Filled.Star))
+                BottomNavigationBar(
+                    mapOf(
+                        "Home" to Icons.Filled.Home,
+                        "Watchlist" to Icons.Filled.Star
+                    )
+                )
             }
         }
     )
@@ -117,14 +123,16 @@ fun BottomNavigationBar(buttons: Map<String, ImageVector>) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround
     ) {
+        var firstButton = true
         for (button in buttons) {
-            NavigationBarItem(selected = true, onClick = { },
+            NavigationBarItem(selected = firstButton, onClick = { },
                 icon = {
                     Icon(
-                        imageVector = Icons.Filled.Home,
-                        contentDescription = "Go to home"
+                        imageVector = button.value,
+                        contentDescription = "Go to ${button.key}"
                     )
-                }, label = { Text(text = "Home") })
+                }, label = { Text(text = button.key) })
+            firstButton = false
         }
     }
 }

@@ -46,12 +46,13 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -87,7 +88,7 @@ fun HomeScreen() {
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            MovieList(movies = getMovies())
+            MovieList(movies = getMovies(), navController)
         }
     }
 }
@@ -114,23 +115,28 @@ fun BottomNavigationBar(buttons: Map<String, ImageVector>) {
 }
 
 @Composable
-fun MovieList(movies: List<Movie> = getMovies()) {
+fun MovieList(movies: List<Movie> = getMovies(), navController: NavHostController) {
     LazyColumn {
         items(movies) { movie ->
-            MovieRow(movie)
+            MovieRow(movie){
+                movieId -> navController.navigate(route = "detailscreen/$movieId")
+            }
         }
     }
 }
 
 @Composable
-fun MovieRow(movie: Movie) {
+fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
     var showDetails by remember {
         mutableStateOf(false)
     }
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp),
+            .padding(5.dp)
+            .clickable {
+                onItemClick(movie.id)
+            },
         shape = ShapeDefaults.Large,
         elevation = CardDefaults.cardElevation(10.dp)
     ) {

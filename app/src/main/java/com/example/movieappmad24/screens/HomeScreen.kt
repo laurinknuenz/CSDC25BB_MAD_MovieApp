@@ -33,6 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,6 +49,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.movieappmad24.composables.BottomNavigationBar
+import com.example.movieappmad24.composables.MovieList
+import com.example.movieappmad24.composables.TopMovieAppBar
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
 
@@ -57,31 +61,15 @@ fun HomeScreen(navController: NavHostController) {
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                ),
-                title = {
-                    Text(
-                        "FHCW Movie App MAD24",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                scrollBehavior = scrollBehavior
-            )
+            TopMovieAppBar(text = "FHCW Movie App MAD24", scrollBehavior = scrollBehavior, false, navController)
         },
         bottomBar = {
-            BottomAppBar()
-            {
-                BottomNavigationBar(
-                    mapOf(
-                        "Home" to Icons.Filled.Home,
-                        "Watchlist" to Icons.Filled.Star
-                    )
+            BottomNavigationBar(
+                mapOf(
+                    "Home" to Icons.Filled.Home,
+                    "Watchlist" to Icons.Filled.Star
                 )
-            }
+            )
         }
     )
     { innerPadding ->
@@ -90,130 +78,5 @@ fun HomeScreen(navController: NavHostController) {
         ) {
             MovieList(movies = getMovies(), navController)
         }
-    }
-}
-
-@Composable
-fun BottomNavigationBar(buttons: Map<String, ImageVector>) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround
-    ) {
-        var firstButton = true
-        for (button in buttons) {
-            NavigationBarItem(selected = firstButton, onClick = { },
-                icon = {
-                    Icon(
-                        imageVector = button.value,
-                        contentDescription = "Go to ${button.key}"
-                    )
-                }, label = { Text(text = button.key) })
-            firstButton = false
-        }
-    }
-}
-
-@Composable
-fun MovieList(movies: List<Movie> = getMovies(), navController: NavHostController) {
-    LazyColumn {
-        items(movies) { movie ->
-            MovieRow(movie){
-                movieId -> navController.navigate(route = "detailscreen/$movieId")
-            }
-        }
-    }
-}
-
-@Composable
-fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
-    var showDetails by remember {
-        mutableStateOf(false)
-    }
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(5.dp)
-            .clickable {
-                onItemClick(movie.id)
-            },
-        shape = ShapeDefaults.Large,
-        elevation = CardDefaults.cardElevation(10.dp)
-    ) {
-        Column {
-            Box(
-                modifier = Modifier
-                    .height(150.dp)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                MoviePoster(movie.images[0], movie.title)
-                ClickableHeartIcon()
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(6.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = movie.title)
-                Icon(
-                    modifier = Modifier
-                        .clickable {
-                            showDetails = !showDetails
-                        },
-                    imageVector =
-                    if (showDetails) Icons.Filled.KeyboardArrowDown
-                    else Icons.Default.KeyboardArrowUp, contentDescription = "Show more"
-                )
-            }
-            AnimatedVisibility(
-                visible = showDetails,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(6.dp),
-            ) {
-                MovieDetails(movie)
-            }
-        }
-    }
-}
-
-@Composable
-fun ClickableHeartIcon() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
-        contentAlignment = Alignment.TopEnd,
-    ) {
-        Icon(
-            tint = MaterialTheme.colorScheme.secondary,
-            imageVector = Icons.Default.FavoriteBorder,
-            contentDescription = "Add to favorites"
-        )
-    }
-}
-
-@Composable
-fun MoviePoster(url: String, movie: String) {
-    AsyncImage(
-        model = url,
-        contentScale = ContentScale.Crop,
-        contentDescription = "$movie - movie poster"
-    )
-}
-
-@Composable
-fun MovieDetails(movie: Movie) {
-    Column {
-        Text(text = "Director: ${movie.director}")
-        Text(text = "Released: ${movie.year}")
-        Text(text = "Genre: ${movie.genre}")
-        Text(text = "Actors: ${movie.actors}")
-        Text(text = "Rating: ${movie.rating}")
-        Divider(modifier = Modifier.padding(0.dp, 4.dp))
-        Text(text = "Plot: ${movie.plot}")
     }
 }

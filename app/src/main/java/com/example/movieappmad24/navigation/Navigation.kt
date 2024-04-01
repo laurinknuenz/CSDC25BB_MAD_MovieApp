@@ -26,7 +26,7 @@ fun Navigation(modifier: Modifier) {
             arguments = listOf(navArgument(name = "movieId") { type = NavType.StringType })
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getString("movieId")
-            if (movieId != null) DetailScreen(movieId)
+            if (movieId != null) DetailScreen(movieId, navController)
         }
     }
 }

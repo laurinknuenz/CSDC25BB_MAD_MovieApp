@@ -19,7 +19,7 @@ import com.example.movieappmad24.models.getMovies
 
 @Composable
 fun DetailScreen(movieId: String, navController: NavHostController) {
-    val movie = getMovies().find { movie -> movie.id == movieId };
+    val movie = getMovies().find { movie -> movie.id == movieId }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),

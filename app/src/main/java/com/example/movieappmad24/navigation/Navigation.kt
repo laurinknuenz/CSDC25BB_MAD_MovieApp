@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.movieappmad24.screens.DetailScreen
 import com.example.movieappmad24.screens.HomeScreen
+import com.example.movieappmad24.screens.WatchlistScreen
 
 @Composable
 fun Navigation(modifier: Modifier) {
@@ -28,7 +29,7 @@ fun Navigation(modifier: Modifier) {
             if (movieId != null) DetailScreen(movieId, navController)
         }
         composable(route = Screen.Watchlist.route) {
-
+            WatchlistScreen(navController = navController)
         }
     }
 }

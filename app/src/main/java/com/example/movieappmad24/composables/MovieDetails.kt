@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -31,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -120,11 +122,11 @@ fun ClickableHeartIcon() {
 }
 
 @Composable
-fun MoviePoster(url: String, movie: String) {
+fun MoviePoster(url: String, movieTitle: String) {
     AsyncImage(
         model = url,
         contentScale = ContentScale.Crop,
-        contentDescription = "$movie - movie poster"
+        contentDescription = "$movieTitle - movie poster"
     )
 }
 
@@ -139,4 +141,22 @@ fun MovieDetails(movie: Movie) {
         Divider(modifier = Modifier.padding(0.dp, 4.dp))
         Text(text = "Plot: ${movie.plot}")
     }
+}
+
+@Composable
+fun MoviePosterGallery(movie: Movie){
+    LazyRow(content = {
+        items(movie.images) { image ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp)
+                    .height((LocalConfiguration.current.screenHeightDp * 0.3).dp),
+                shape = ShapeDefaults.Large,
+                elevation = CardDefaults.cardElevation(10.dp)
+            ) {
+                MoviePoster(url = image, movieTitle = movie.title)
+            }
+        }
+    })
 }

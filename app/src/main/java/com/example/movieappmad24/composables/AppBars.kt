@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavHostController
 
 @Composable
-fun TopMovieAppBar(
+fun SimpleTopAppBar(
     text: String,
     scrollBehavior: TopAppBarScrollBehavior,
     backButton: Boolean,
@@ -58,7 +58,7 @@ fun TopMovieAppBar(
 }
 
 @Composable
-fun BottomNavigationBar(buttons: Map<String, ImageVector>) {
+fun SimpleBottomAppBar(buttons: Map<String, ImageVector>) {
     BottomAppBar() {
         Row(
             modifier = Modifier.fillMaxWidth(),

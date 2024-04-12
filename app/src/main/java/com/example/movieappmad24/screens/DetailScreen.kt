@@ -15,11 +15,10 @@ import androidx.navigation.NavHostController
 import com.example.movieappmad24.composables.MoviePosterGallery
 import com.example.movieappmad24.composables.MovieRow
 import com.example.movieappmad24.composables.SimpleTopAppBar
-import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.models.Movie
 
 @Composable
-fun DetailScreen(movieId: String, navController: NavHostController) {
-    val movie = getMovies().find { movie -> movie.id == movieId }
+fun DetailScreen(navController: NavHostController, movie: Movie?) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),

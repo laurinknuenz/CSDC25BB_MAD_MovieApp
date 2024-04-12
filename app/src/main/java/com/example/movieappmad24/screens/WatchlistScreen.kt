@@ -15,15 +15,20 @@ import androidx.navigation.NavHostController
 import com.example.movieappmad24.composables.MovieList
 import com.example.movieappmad24.composables.SimpleBottomAppBar
 import com.example.movieappmad24.composables.SimpleTopAppBar
-import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.models.MoviesViewModel
 
 @Composable
-fun WatchlistScreen(navController: NavHostController) {
+fun WatchlistScreen(navController: NavHostController, moviesViewModel: MoviesViewModel) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            SimpleTopAppBar(text = "Your Watchlist", scrollBehavior = scrollBehavior, false, navController)
+            SimpleTopAppBar(
+                text = "Your Watchlist",
+                scrollBehavior = scrollBehavior,
+                false,
+                navController
+            )
         },
         bottomBar = {
             SimpleBottomAppBar(navController, false)
@@ -33,7 +38,7 @@ fun WatchlistScreen(navController: NavHostController) {
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            MovieList(movies = getMovies(), navController)
+            MovieList(navController, moviesViewModel) { moviesViewModel.favoriteMovies }
         }
     }
 }

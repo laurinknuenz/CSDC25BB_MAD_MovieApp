@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -21,6 +22,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
@@ -37,22 +39,34 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
-import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.models.MoviesViewModel
 import com.example.movieappmad24.navigation.Screen
 
 @Composable
-fun MovieList(movies: List<Movie> = getMovies(), navController: NavHostController) {
+fun MovieList(
+    navController: NavHostController,
+    viewModel: MoviesViewModel,
+    movies: () -> List<Movie> = { viewModel.movies }
+) {
     LazyColumn {
-        items(movies) { movie ->
-            MovieRow(movie) { movieId ->
-                navController.navigate(route = Screen.Detail.route + "/$movieId")
-            }
+        items(movies()) { movie ->
+            MovieRow(movie,
+                onItemClick = { movieId ->
+                    navController.navigate(route = Screen.Detail.withId(movieId))
+                },
+                onFavClick = { movieId ->
+                    viewModel.toggleFavoriteMovie(movieId)
+                })
         }
     }
 }
 
 @Composable
-fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
+fun MovieRow(
+    movie: Movie,
+    onItemClick: (String) -> Unit = {},
+    onFavClick: (String) -> Unit = {}
+) {
     var showDetails by remember {
         mutableStateOf(false)
     }
@@ -74,7 +88,9 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
                 contentAlignment = Alignment.Center
             ) {
                 MoviePoster(movie.images[0], movie.title)
-                ClickableHeartIcon()
+                ClickableHeartIcon(
+                    movie.isFavorite,
+                    onFavClick = { onFavClick(movie.id) })
             }
             Row(
                 modifier = Modifier
@@ -107,18 +123,22 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
 }
 
 @Composable
-fun ClickableHeartIcon() {
+fun ClickableHeartIcon(
+    isFavorite: Boolean,
+    onFavClick: () -> Unit = {}
+) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
+            .fillMaxSize(),
         contentAlignment = Alignment.TopEnd,
     ) {
-        Icon(
-            tint = MaterialTheme.colorScheme.secondary,
-            imageVector = Icons.Default.FavoriteBorder,
-            contentDescription = "Add to favorites"
-        )
+        IconButton(onClick = { onFavClick() }) {
+            Icon(
+                tint = MaterialTheme.colorScheme.secondary,
+                imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                contentDescription = "Add to favorites",
+            )
+        }
     }
 }
 

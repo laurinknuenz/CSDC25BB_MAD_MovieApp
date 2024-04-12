@@ -30,7 +30,10 @@ fun Navigation() {
             val movieId = backStackEntry.arguments?.getString("movieId")
             if (movieId != null) DetailScreen(
                 navController,
-                moviesViewModel.movies.find { movie -> movie.id == movieId })
+                moviesViewModel.movies.find { movie -> movie.id == movieId },
+                onFavClick = { favMovieId ->
+                    moviesViewModel.toggleFavoriteMovie(favMovieId)
+                })
         }
         composable(route = Screen.Watchlist.route) {
             WatchlistScreen(navController = navController, moviesViewModel)

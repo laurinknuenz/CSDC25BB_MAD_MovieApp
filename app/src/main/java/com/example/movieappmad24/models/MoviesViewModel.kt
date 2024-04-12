@@ -1,6 +1,5 @@
 package com.example.movieappmad24.models
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 

@@ -1,6 +1,6 @@
 package com.example.movieappmad24.navigation
 
-const val DETAIL_ARGUMENT_KEY = "movieId";
+const val DETAIL_ARGUMENT_KEY = "movieId"
 
 sealed class Screen(val route: String) {
     data object Home : Screen(route = "home")

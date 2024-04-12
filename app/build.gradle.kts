@@ -55,7 +55,12 @@ android {
 
 dependencies {
     val nav_version = "2.7.7"
+    val lifecycle_version = "2.7.0"
+    val media3_version  = "1.3.1"
 
+    implementation("androidx.media3:media3-exoplayer:$media3_version")
+    implementation("androidx.media3:media3-ui:$media3_version")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.core:core-ktx:1.10.1")
